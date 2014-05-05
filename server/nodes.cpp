@@ -9,7 +9,6 @@
 map<int,Sensor> S_map;
 map<int,Actuator> A_map;
 
-
 int extract_key(string ip){
 
 	istringstream iss(ip);

@@ -53,4 +53,5 @@ public:
 	void add_act(int a_key);
 };
 
+
 #endif
