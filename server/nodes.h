@@ -1,3 +1,6 @@
+#ifndef NODES_H_
+#define NODES_H_
+
 #include<string>
 #include<map>
 #include<list>
@@ -14,7 +17,7 @@ class Actuator {
 	string ip;
 	int key;
 	bool status;
-	static timer_t tid;
+	timer_t tid;
 	time_t event_time;
 	struct sigaction timeup;
 
@@ -28,7 +31,7 @@ public:
 	double get_time();
 	string get_ip();
 
-	void TimerHandler(int);
+	static void TimerHandler(int);
 	timer_t SetTimer(int);
 };
 
@@ -49,3 +52,5 @@ public:
 	void add_N(int n_key);
 	void add_act(int a_key);
 };
+
+#endif

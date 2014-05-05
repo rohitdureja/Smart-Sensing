@@ -6,6 +6,10 @@
 #include <time.h>
 #include <signal.h>
 
+map<int,Sensor> S_map;
+map<int,Actuator> A_map;
+
+
 int extract_key(string ip){
 
 	istringstream iss(ip);
@@ -64,7 +68,7 @@ string Actuator::get_ip(){
 }
 
 void Actuator::TimerHandler(int signo){
-	reset();
+	A_map[signo].reset();
 }
 
 timer_t Actuator::SetTimer(int time_out){
@@ -109,7 +113,7 @@ void Sensor::set_self(map<int, Sensor> &sensor_map, map<int, Actuator> &act_map)
 	//if its actuator is already set by a neighbour node just increase the time_out to 5
 	//else set the neighbours as this is the node through which intersection is entered
 
-	if(act_map[act_key].get_status){
+	if(act_map[act_key].get_status()){
 		if (act_map[act_key].get_time()<=60)
 			act_map[act_key].set_status(300);
 		else set_N(60,sensor_map,act_map);
