@@ -9,26 +9,23 @@
 map<int,Sensor> S_map;
 map<int,Actuator> A_map;
 
-int extract_key(string ip){
+int extract_key(struct sockaddr_in addr){
 
-	istringstream iss(ip);
-	string token;
-	string ip_t[4];
-	int i = 0;
-	while (getline(iss, token, '.'))
-	{
-		ip_t[i] = token;
-		i++;
-	}
-	// how to validate that the ip is indeed of our subnet
-	return (atoi(ip_t[3].c_str()));
+	char *ip = inet_ntoa(addr.sin_addr);
+	int port = ntohs(addr.sin_port);
+	
+	char *k;
+	k = strtok(ip,".");
+	for(int i=0;i<3;++i)
+		k = strok(NULL,".");
+	return (atoi(k)+port);
 }
 
-Actuator::Actuator(string ip_in){
+Actuator::Actuator(struct sockaddr_in addr){
 	
-	ip = ip_in;
+	address = addr;
 	status = false;
-	key = extract_key(ip);
+	key = extract_key(address);
 
 	//setting up the timer
 	sigemptyset(&timeup.sa_mask);
@@ -62,10 +59,10 @@ double Actuator::get_time(){
 	return 0;
 }
 
-string Actuator::get_ip(){
+/*string Actuator::get_ip(){
 	return ip;
 }
-
+*/
 void Actuator::TimerHandler(int signo){
 	A_map[signo].reset();
 }
@@ -136,11 +133,11 @@ int Sensor::get_key(){
 int Sensor::get_act(){
 	return act_key;
 }
-
+/*
 string Sensor::get_ip(){
 	return ip;
 }
-
+*/
 void Sensor::add_N(int n_key){
 	N_keys.push_back(n_key);
 }
