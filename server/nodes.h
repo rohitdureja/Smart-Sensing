@@ -23,7 +23,7 @@ class Actuator {
 
 public:
 	Actuator(){};
-	Actuator(string ip, map<int,Actuator> &act_map);
+	Actuator(string ip);
 
 	void set_status(int time_out);
 	void reset();
@@ -43,11 +43,12 @@ class Sensor {
 
 public:
 	Sensor(){};
-	Sensor(string ip_in, map<int, Sensor> &sensor_map);
+	Sensor(string ip_in);
 
-	void set_self(map<int,Sensor> &sensor_map, map<int,Actuator> &act_map);
-	void set_N(int time, map<int, Sensor> &sensor_map, map<int,Actuator> &act_map);
+	void set_self();
+	void set_N(int time);
 	int get_key();
+	int get_act();
 	string get_ip();
 	void add_N(int n_key);
 	void add_act(int a_key);

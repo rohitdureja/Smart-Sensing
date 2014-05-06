@@ -24,7 +24,7 @@ int extract_key(string ip){
 	return (atoi(ip_t[3].c_str()));
 }
 
-Actuator::Actuator(string ip_in, map<int, Actuator> &act_map){
+Actuator::Actuator(string ip_in){
 	
 	ip = ip_in;
 	status = false;
@@ -38,7 +38,7 @@ Actuator::Actuator(string ip_in, map<int, Actuator> &act_map){
 		perror("sigaction failed");
 		exit(EXIT_FAILURE);
 	}
-	act_map[key]=*this;
+	A_map[key]=*this;
 }
 
 void Actuator::set_status(int time_out){
@@ -101,36 +101,40 @@ timer_t Actuator::SetTimer(int time_out){
 }
 
 
-Sensor::Sensor(string ip_in, map<int, Sensor> &sensor_map){
+Sensor::Sensor(string ip_in){
 	ip = ip_in;
 	key = extract_key(ip);
-	sensor_map[key] = *this;
+	S_map[key] = *this;
 }
 
-void Sensor::set_self(map<int, Sensor> &sensor_map, map<int, Actuator> &act_map){
+void Sensor::set_self(){
 
 	//if its actuator is already set by a neighbour node just increase the time_out to 5
 	//else set the neighbours as this is the node through which intersection is entered
 
-	if(act_map[act_key].get_status()){
-		if (act_map[act_key].get_time()<=60)
-			act_map[act_key].set_status(300);
-		else set_N(60,sensor_map,act_map);
+	if(A_map[act_key].get_status()){
+		if (A_map[act_key].get_time()<=60)
+			A_map[act_key].set_status(300);
+		else set_N(60);
 	}
-	else set_N(60,sensor_map,act_map);
+	else set_N(60);
 }
 
-void Sensor::set_N(int time, map<int, Sensor> &sensor_map, map<int, Actuator> &act_map){
+void Sensor::set_N(int time){
 	if (N_keys.empty())
 		return;
 	list<int>::iterator i;
 	for (i = N_keys.begin(); i != N_keys.end(); ++i){
-		act_map[sensor_map[*i].act_key].set_status(time);
+		A_map[S_map[*i].get_act()].set_status(time);
 	}
 }
 
 int Sensor::get_key(){
 	return key;
+}
+
+int Sensor::get_act(){
+	return act_key;
 }
 
 string Sensor::get_ip(){

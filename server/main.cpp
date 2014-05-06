@@ -15,12 +15,12 @@ int main()
 	string s4 = "192.168.1.2";
 	string s5 = "192.168.1.4";
 
-	Sensor S1(s1, S_map);
-	Sensor S2(s2, S_map);
-	Sensor S3(s3, S_map);
+	Sensor S1(s1);
+	Sensor S2(s2);
+	Sensor S3(s3);
 
-	Actuator A1(s4, A_map);
-	Actuator A2(s5, A_map);
+	Actuator A1(s4);
+	Actuator A2(s5);
 
 	S_map[extract_key(s1)].add_act(extract_key(s4));
 	S_map[extract_key(s2)].add_act(extract_key(s4));
