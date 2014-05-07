@@ -53,7 +53,6 @@ void Actuator::set_status(int time_out){
 }
 
 void Actuator::reset(){
-	//some time checking mechanism has to be here
 	status = false;
 }
 
@@ -132,31 +131,8 @@ void Sensor::set_N(int time_out){
 		return;
 	list<int>::iterator i;
 	for (i = N_keys.begin(); i != N_keys.end(); ++i){
-		Server.A_map[Server.S_map[*i].get_act()].set_status(time_out);
+		Server.A_map[Server.S_map[*
+		}
 	}
-}
-
-int Sensor::get_key(){
-	return key;
-}
-
-int Sensor::get_act(){
-	return act_key;
-}
-
-struct sockaddr_in Sensor::get_addr(){
-	return address;
-}
-
-void Sensor::add_N(int n_key){
-	N_keys.push_back(n_key);
-}
-
-void Sensor::add_act(int a_key){
-	act_key = a_key;
-}
-
-
-void Server_Main::set_localize(){
 
 }

@@ -1,6 +1,8 @@
 #ifndef NODES_H_
 #define NODES_H_
 
+#define _(x)
+
 #include <string>
 #include <map>
 #include <list>
