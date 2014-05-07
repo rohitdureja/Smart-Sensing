@@ -1,15 +1,26 @@
 #include "nodes.h"
-#include<map>
-#include<string>
 
-extern map<int,Sensor> S_map;
-extern map<int,Actuator> A_map;
+#include <string>
+#include <map>
+#include <list>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <unistd.h>
+
+extern Server_Main Server;
 
 using namespace std;
 
 int main()
 {
-	string s1 = "192.168.1.1";
+	/*struct sockaddr_in s1;
 	string s2 = "192.168.1.24";
 	string s3 = "192.168.1.10";
 	string s4 = "192.168.1.2";
@@ -22,10 +33,10 @@ int main()
 	Actuator A1(s4);
 	Actuator A2(s5);
 
-	S_map[extract_key(s1)].add_act(extract_key(s4));
-	S_map[extract_key(s2)].add_act(extract_key(s4));
-	S_map[extract_key(s3)].add_act(extract_key(s5));
-	S_map[extract_key(s1)].add_N(extract_key(s3));
-
+	Server.S_map[extract_key(s1)].add_act(extract_key(s4));
+	Server.S_map[extract_key(s2)].add_act(extract_key(s4));
+	Server.S_map[extract_key(s3)].add_act(extract_key(s5));
+	Server.S_map[extract_key(s1)].add_N(extract_key(s3));
+*/
 	return 0;
 }

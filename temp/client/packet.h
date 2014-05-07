@@ -1,5 +1,3 @@
-
-
 #ifndef PACKET_H_
 #define PACKET_H_
 
@@ -18,6 +16,5 @@ public:
 	// ~frame();
 
 };
-
 
 #endif

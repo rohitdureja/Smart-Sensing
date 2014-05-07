@@ -14,20 +14,11 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <unistd.h>
-#include <mutex>
-#include <condition_variable>
 
 
 using namespace std;
 
 int extract_key(struct sockaddr_in addr);
-
-/*
-class node{
-	
-	string ip;
-	int key;
-*/
 
 class Actuator {
 	
@@ -46,7 +37,7 @@ public:
 	void reset();
 	bool get_status();
 	double get_time();
-//	string get_ip();
+	struct sockaddr_in get_addr();
 
 	static void TimerHandler(int);
 	timer_t SetTimer(int);
@@ -66,17 +57,20 @@ public:
 	void set_N(int time);
 	int get_key();
 	int get_act();
-//	string get_ip();
+	struct sockaddr_in get_addr();
 	void add_N(int n_key);
 	void add_act(int a_key);
 };
 
-/*
-
-class server_main {
-	list<int> sensor_keys;
-	list<int> actuator_keys;
+class Server_Main {
 public:
-	void localize();
-*/
+	map<int,Sensor> S_map;
+	map<int,Actuator> A_map;
+	list<int> S_keys;
+	list<int> A_keys;
+	
+	Server_Main(){};
+	void set_localize();
+};
+
 #endif
