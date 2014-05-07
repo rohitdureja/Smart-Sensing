@@ -14,6 +14,9 @@
 #include <netdb.h>
 #include <unistd.h>
 
+#define _(x) 
+
+
 Server_Main Server;
 
 int extract_key(struct sockaddr_in addr){
@@ -23,17 +26,17 @@ int extract_key(struct sockaddr_in addr){
 	
 	char *k;
 	k = strtok(ip,".");
-	for(int i=0;i<3;++i)
+	for(int i=0;i<3;++i)         //To obtain the last part of the IPV4 address
 		k = strtok(NULL,".");
-	return (atoi(k)+port);
+	return (atoi(k)+port);		//Unique key for the sensor and the actuator
 }
 
 Actuator::Actuator(struct sockaddr_in addr){
+	_(requires \addr is unique)
 	
 	address = addr;
 	status = false;
 	key = extract_key(address);
-
 	//setting up the timer
 	sigemptyset(&timeup.sa_mask);
 	timeup.sa_handler = TimerHandler;
@@ -43,7 +46,8 @@ Actuator::Actuator(struct sockaddr_in addr){
 		exit(EXIT_FAILURE);
 	}
 	Server.A_keys.push_back(key);
-	Server.A_map[key]=*this;
+	Server.A_map[key]=*this;				//Adding the actuator to the map
+	_(requires \Server.A_map[key] is unoccupied before writing)
 }
 
 void Actuator::set_status(int time_out){
@@ -53,7 +57,6 @@ void Actuator::set_status(int time_out){
 }
 
 void Actuator::reset(){
-	//some time checking mechanism has to be here
 	status = false;
 }
 
@@ -109,16 +112,18 @@ timer_t Actuator::SetTimer(int time_out){
 Sensor::Sensor(struct sockaddr_in addr){
 	address = addr;
 	key = extract_key(address);
-
+									//adding the sensor in the map
 	Server.S_keys.push_back(key);
 	Server.S_map[key] = *this;
 }
 
 void Sensor::set_self(){
 
-	//if its actuator is already set by a neighbour node just increase the time_out to 5
-	//else set the neighbours as this is the node through which intersection is entered
+	/*If a sensor detects a person (entering the intersection), the server sets a time limit of 60 seconds on the sensor's neighbour's actuators .
+	When another sensor in the intersection detects a person again (leaving the intersection) it increases the time of  its already on actuator 
+	to 300 seconds*/
 
+	
 	if(Server.A_map[act_key].get_status()){
 		if (Server.A_map[act_key].get_time()<=60)
 			Server.A_map[act_key].set_status(300);
