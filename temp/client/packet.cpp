@@ -5,9 +5,8 @@
 
 void frame::make(char *buf,int control,int mode, int payload)
 {	
-	int length;
 	sprintf(buf, "%d:%d:%d", control, mode, payload);
-	cout << strlen(buf) << endl;
+	//cout << strlen(buf) << endl;
 }
 
 

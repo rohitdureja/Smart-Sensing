@@ -46,7 +46,6 @@ int main(int argc , char *argv[])
 
 		int rc = read(new_socket,message, 256);
 		fwrite(message, sizeof(char), rc, stdout);
-		//cout << std::endl;
 		fflush(stdout);
 	}
 	

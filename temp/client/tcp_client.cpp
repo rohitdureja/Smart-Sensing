@@ -13,9 +13,10 @@ tcp_client::tcp_client()
 		exit(0);
 	}
 
+
 }
 
-void tcp_client::connect_to_server(const char * ipaddr, int port)
+int tcp_client::connect_to_server(const char * ipaddr, int port)
 {
 	server.sin_addr.s_addr = inet_addr(ipaddr);
 	server.sin_port = htons(port);
@@ -27,6 +28,9 @@ void tcp_client::connect_to_server(const char * ipaddr, int port)
 		exit(0);
 	}
 
+	return csock;
+
+
 }
 
 int tcp_client::send_data(const char * packet, int length)
@@ -36,5 +40,10 @@ int tcp_client::send_data(const char * packet, int length)
 
 int tcp_client::receive_data(char * buf)
 {
-	return (recv(csock, buf, BUFLEN, 0));
+	recv(csock, buf, 9, 0);
+}
+
+void tcp_client::conn_close()
+{
+	close(csock);
 }

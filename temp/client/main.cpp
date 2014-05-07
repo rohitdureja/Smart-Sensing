@@ -12,42 +12,28 @@
 #include <queue>
 #include "tcp_client.h"
 #include "packet.h"
+include "threads.h"
+#define BUFLEN 256
 
-#define SENSOR 100
-#define ACTUATOR 101
+extern queue<string> send_message_queue;
+extern mutex send_message_queue_mtx;
+extern queue<string> receive_message_queue;
+extern mutex receive_message_queue_mtx;
+extern condition_variable receive_message_cv;
 
-// thread to detect human activity
-void person_detect_thread()
+class message_info
 {
-	char sensor_output;
-	sensor_output = getchar();
-	cout << "person detected" << endl;
-}
+public:
+	struct sockaddr_in address;
+	char packet[BUFLEN];
+};
 
-// thread to handle command sent by server
-void server_handler_thread()
+class app_packet
 {
-		
-
-}
-
-// thread to send messages over tcp connection
-void send_message_thread()
-{
-		
-}
-
-// thread to receive message over tcp connection
-void receive_message_thread()
-{
-
-}
-
-// thread to control actuator - turn on/off
-void actuator_control_thread()
-{
-		
-}
+public:
+	uint8_t mtype;
+	char payload[BUFLEN];
+};
 
 
 int main(int argc, char *argv[])
@@ -66,45 +52,36 @@ int main(int argc, char *argv[])
 	int node_id = atoi(argv[5]);
 	int mode = atoi(argv[3]);
 
-	// communication buffers
-	queue<string> send_message_queue;
-	mutex send_message_queue_mtx;
-	queue<string> receive_message_queue;
-	mutex receive_message_queue_mtx;
+	int sockfd;
 
 	// establish tcp connection to server
-	tcp_client connection;
-	//connection.connect_to_server(argv[1], atoi(argv[2]));
+	tcp_client t1;
+	sockfd = t1.connect_to_server(argv[1], atoi(argv[2]));
 
-	thread server_handler(server_handler_thread);
-	thread send_message(send_message_thread);
-	thread receive_message(receive_message_thread);
-	server_handler.join();
-	send_message.join();
-	receive_message.join();
+	threads th1, th2, th3, th4, th5;
+	
+	thread t1(&threads::worker, &th1, &receive_message_queue, &sockfd);
+	t1.join();
+
+	thread t2(&threads::sender, &th2, &send_message_queue, &sockfd);
+	t2.join();
+
+	thread t3(&threads::receiver, &th3, &receive_message_queue, &sockfd);
+	t3.join();
+
 	if(mode == SENSOR)
 	{
-		thread sensor(person_detect_thread);
-		sensor.join();
+		thread t4(&threads::person_detect, &th4);
+		t4.join();
 	}
 	else if(mode == ACTUATOR)
 	{
-		thread actuator_control(actuator_control_thread);
-		actuator_control.join();
+		thread t5(&threads::actuator_action, &th5);
+		t5.join();	
 	}
 
 
-/*
-frame f;
-char ch[256];
-f.make(ch, 545, 66, 12);
-cout << ch << endl;
+	tcp_client t1;
+	csock = t1.connect_to_server("127.0.0.1", 10059);
 
-
-int control;
-int mode;
-int payload;
-
-f.parse(ch, &control, &mode, &payload);
-cout << control << endl << mode << endl << payload << endl;*/
 }

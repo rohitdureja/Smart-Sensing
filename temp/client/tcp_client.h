@@ -13,6 +13,7 @@
 #include <string.h>
 #include <cstdio>
 
+
 # define BUFLEN 256
 //----------------------------------------------------------------------------------------//
 
@@ -22,9 +23,10 @@ class tcp_client
 {
 public:
 	tcp_client();
-	void connect_to_server(const char *, int port);
+	int connect_to_server(const char *, int port);
 	int send_data(const char *, int);
 	int receive_data(char *);
+	void conn_close();
 	//virtual ~tcp_client();
 private: 
 	sockaddr_in server;
