@@ -3,17 +3,51 @@
 #include <iostream>
 #include <cstdlib>
 
-void frame::make(char *buf,int control,int mode, int payload)
-{	
-	sprintf(buf, "%d:%d:%d", control, mode, payload);
-	//cout << strlen(buf) << endl;
-}
 
-
-void frame::parse(char *buf, int * control, int *mode, int *payload)
+frame::frame(int Ntype, int Mtype, int Payload, struct sockaddr_in addr)
 {
-	*control = atoi(strtok(buf, ":"));
-	*mode = atoi(strtok(NULL, ":"));
-	*payload = atoi(strtok(NULL, ":"));
+	this->ntype = Ntype;
+	this->mtype = Mtype;
+	this->payload = Payload;
+	this->address = addr;
 }
 
+void frame::msg_set(int Ntype, int Mtype, int Payload,struct sockaddr_in addr)
+{
+	ntype = Ntype;
+	mtype = Mtype;
+	payload = Payload;
+	address = addr;
+}
+
+void frame::make(char *buf)
+{	
+	sprintf(buf, "%d:%d:%d",ntype, mtype, payload);
+}
+
+void frame::parse(char *buf)
+{
+	ntype = atoi(strtok(buf, ":"));
+	mtype = atoi(strtok(NULL, ":"));
+	payload = atoi(strtok(NULL, ":"));
+}
+
+int frame::get_ntype()
+{
+	return this->ntype;
+}
+
+int frame::get_mtype()
+{
+	return this->mtype;
+} 
+
+int frame::get_payload()
+{
+	return this->payload;
+}
+
+struct sockaddr_in frame::get_addr()
+{
+	return this->address;
+}

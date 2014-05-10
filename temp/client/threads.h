@@ -1,3 +1,6 @@
+#ifndef THREADS_H_
+#define THREADS_H_
+
 #include <iostream>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -7,24 +10,45 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include "tcp_client.h"
+#include "message.h"
+#include <mutex>
+#include <thread>
+#include <queue>
+#include <condition_variable>
+#include "packet.h"
 
-queue<string> send_message_queue;
-mutex send_message_queue_mtx;
-queue<string> receive_message_queue;
-mutex receive_message_queue_mtx;
-condition_variable receive_message_cv;
+using namespace std;
 
 class threads
 {
+
+int csock;
+queue<message_info> send_frame_queue;
+mutex send_frame_queue_mtx;
+condition_variable send_frame_cv;
+queue<message_info> receive_frame_queue;
+mutex receive_frame_queue_mtx;
+condition_variable receive_frame_cv;
+
+char * server_ip;
+int server_port;
+
 public:
-	void worker(queue * receive_queue, int * csock);
+	threads(char *, int);
 
-	void sender(queue * send_queue, int *csock);
+	void sender();
 	
-	void receiver(queue * receive_queue, int *csock);
+	void receiver();
 
-	void actuator_action();
+	void send_message(frame *);
+
+	void receive_message(frame *);
+
+/*	void actuator_action();
 
 	void person_detect();
-	
+	*/
 };
+
+#endif

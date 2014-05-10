@@ -1,4 +1,3 @@
-
 #ifndef TCP_CLIENT_H
 # define TCP_CLIENT_H
 
@@ -13,8 +12,6 @@
 #include <string.h>
 #include <cstdio>
 
-
-# define BUFLEN 256
 //----------------------------------------------------------------------------------------//
 
 using namespace std;
@@ -23,11 +20,10 @@ class tcp_client
 {
 public:
 	tcp_client();
-	int connect_to_server(const char *, int port);
+	int connect_to_server(char *, int port);
 	int send_data(const char *, int);
 	int receive_data(char *);
 	void conn_close();
-	//virtual ~tcp_client();
 private: 
 	sockaddr_in server;
 	int csock;
