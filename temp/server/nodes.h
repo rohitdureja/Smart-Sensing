@@ -3,6 +3,7 @@
 
 #define _(x)
 
+#include <queue>
 #include <string>
 #include <map>
 #include <list>
@@ -21,7 +22,7 @@
 using namespace std;
 
 int extract_key(struct sockaddr_in addr);
-//Each key is a unique number given by the sum of the last 3 digits of the IP address of the node and the PORT of the node
+
 class Actuator {
 	
 	struct sockaddr_in address;
@@ -66,10 +67,12 @@ public:
 
 class Server_Main {
 public:
-	map<int,Sensor> S_map; //map for sensor nodes
-	map<int,Actuator> A_map;//map for Actuator nodes
-	list<int> S_keys;
-	list<int> A_keys;
+	map<int,Sensor> S_map;
+	map<int,Actuator> A_map;
+	
+	queue<frame> send_queue;
+	queue<frame> recv_queue;
+
 	
 	Server_Main(){};
 	void set_localize();

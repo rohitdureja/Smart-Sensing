@@ -3,18 +3,20 @@
 #include <iostream>
 #include <cstdlib>
 
-frame::frame(int Ntype, int Mtype, int Payload)
+frame::frame(int Ntype, int Mtype, int Payload, struct sockaddr_in addr)
 {
 	ntype = Ntype;
 	mtype = Mtype;
 	payload = Payload;
+	address = addr;
 }
 
-void frame::msg_set(int Ntype, int Mtype, int Payload)
+void frame::msg_set(int Ntype, int Mtype, int Payload,struct sockaddr_in addr)
 {
 	ntype = Ntype;
 	mtype = Mtype;
 	payload = Payload;
+	address = addr;
 }
 
 void frame::make(char *buf)
@@ -45,3 +47,7 @@ int get_payload()
 	return payload;
 }
 
+struct sockaddr_in get_addr()
+{
+	return address;
+}
