@@ -32,22 +32,22 @@ void frame::parse(char *buf)
 	payload = atoi(strtok(NULL, ":"));
 }
 
-int get_ntype()
+int frame::get_ntype()
 {
-	return ntype;
+	return this->ntype;
 }
 
-int get_mtype()
+int frame::get_mtype()
 {
-	return mtype;
+	return this->mtype;
 } 
 
-int get_payload()
+int frame::get_payload()
 {
-	return payload;
+	return this->payload;
 }
 
-struct sockaddr_in get_addr()
+struct sockaddr_in frame::get_addr()
 {
-	return address;
+	return this->address;
 }
