@@ -22,18 +22,16 @@ using namespace std;
 
 class threads
 {
-
-int csock;
-queue<message_info> send_frame_queue;
+queue<frame> send_frame_queue;
 mutex send_frame_queue_mtx;
 condition_variable send_frame_cv;
-queue<message_info> receive_frame_queue;
+queue<frame> receive_frame_queue;
 mutex receive_frame_queue_mtx;
 condition_variable receive_frame_cv;
 
 char * server_ip;
 int server_port;
-
+tcp_client conn;
 public:
 	threads(char *, int);
 

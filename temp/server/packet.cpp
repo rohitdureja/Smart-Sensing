@@ -5,18 +5,18 @@
 
 frame::frame(int Ntype, int Mtype, int Payload, struct sockaddr_in addr)
 {
-	ntype = Ntype;
-	mtype = Mtype;
-	payload = Payload;
-	address = addr;
+	this->ntype = Ntype;
+	this->mtype = Mtype;
+	this->payload = Payload;
+	this->address = addr;
 }
 
 void frame::msg_set(int Ntype, int Mtype, int Payload,struct sockaddr_in addr)
 {
-	ntype = Ntype;
-	mtype = Mtype;
-	payload = Payload;
-	address = addr;
+	this->ntype = Ntype;
+	this->mtype = Mtype;
+	this->payload = Payload;
+	this->address = addr;
 }
 
 void frame::make(char *buf)
@@ -25,11 +25,12 @@ void frame::make(char *buf)
 //	cout << strlen(buf) << endl;
 }
 
-void frame::parse(char *buf)
+void frame::parse(char *buf, struct sockaddr_in sock)
 {
-	ntype = atoi(strtok(buf, ":"));
-	mtype = atoi(strtok(NULL, ":"));
-	payload = atoi(strtok(NULL, ":"));
+	this->ntype = atoi(strtok(buf, ":"));
+	this->mtype = atoi(strtok(NULL, ":"));
+	this->payload = atoi(strtok(NULL, ":"));
+	this->address = sock;
 }
 
 int frame::get_ntype()
@@ -49,5 +50,5 @@ int frame::get_payload()
 
 struct sockaddr_in frame::get_addr()
 {
-	return this->address;
+	return (this->address);
 }

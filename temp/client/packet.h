@@ -24,7 +24,7 @@ public:
 
 	void msg_set(int,int,int, struct sockaddr_in);
 	void make(char *);
-	void parse(char *);
+	void parse(char *, struct sockaddr_in);
 
 	int get_ntype();
 	int get_mtype();

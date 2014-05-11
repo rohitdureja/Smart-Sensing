@@ -25,11 +25,12 @@ void frame::make(char *buf)
 	sprintf(buf, "%d:%d:%d",ntype, mtype, payload);
 }
 
-void frame::parse(char *buf)
+void frame::parse(char *buf,  struct sockaddr_in sock)
 {
 	ntype = atoi(strtok(buf, ":"));
 	mtype = atoi(strtok(NULL, ":"));
 	payload = atoi(strtok(NULL, ":"));
+	address = sock;
 }
 
 int frame::get_ntype()
