@@ -43,9 +43,7 @@ public:
 
 	void receive_message(frame *);
 
-	mutex get_receive_frame_mutex();
-
-	queue<frame> get_receive_frame_queue();
+	void worker();
 /*	void actuator_action();
 
 	void person_detect();

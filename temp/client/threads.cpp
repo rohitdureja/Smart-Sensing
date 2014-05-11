@@ -65,17 +65,19 @@ void threads::receiver()
 		}
 	}	
 
-mutex threads::get_receive_frame_mtx()
-{
-	return this->receive_frame_mtx;
-}
+void threads::worker()
+{	
+	frame read_frame;
+	unique_lock<mutex> receive_lk(this->receive_frame_queue_mtx);
+		
+		while(this->receive_frame_queue.empty())
+		{
+			this->receive_frame_cv.wait(receive_lk);
+		}
 
-queue<frame> threads::get_receive_frame_queue()
-{
-	return this->receive_frame_queue;
-}
-
-condition_variable threads::get_receive_frame_cv()
-{
-	return this->receive_frame_cv;
+		read_frame = this->receive_frame_queue.front();
+		this->receive_frame_queue.pop();
+		this->receive_frame_queue_mtx.unlock();
+		
+		// do things based on what the frame has
 }
