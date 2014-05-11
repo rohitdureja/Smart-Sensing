@@ -38,12 +38,18 @@ int main(int argc, char *argv[])
 	// Init: send messages
 	frame send_frame;
 	
+/*	// Receive Message from the Queue
+	th1.receive_message(&read_frame);
+
+	// Sending message
+	th1.send_message(&send_frame);
+*/
+
 	// Deal with converting message to frame also!! 
 	while(1)
 	{
-	// Receive Message from the Queue
-	th1.receive_message(&read_frame);
-	th1.send_message(&send_frame);
+		
+
 
 	}
 

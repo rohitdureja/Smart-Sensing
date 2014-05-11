@@ -9,17 +9,21 @@
 	threads::threads(char *server_ip_l, int port)
 	{	
 		//strncpy(server_ip, server_ip_l,strlen(server_ip_l));
-		conn.connect_to_server(server_ip_l, port);
+		conn.connect_to_server(server_ip_l, port, 0);
 	}
 
 void threads::send_message(frame* send_frame)
 	{
 		// Send message using tcp_client.c/.h
+		this->send_frame_queue.push(*send_frame);
 	}
 
 void threads::receive_message(frame* read_frame)
 	{
-		// Receive message using tcp_client.c/.h
+		// Just pop from the queue if queue not empty
+		frame temp_frame = this->receive_frame_queue.front();
+		this->receive_frame_queue.pop();
+		read_frame = &temp_frame;
 	}
 
 void threads::sender()

@@ -16,17 +16,26 @@ tcp_client::tcp_client()
 
 }
 
-int tcp_client::connect_to_server(char * ipaddr, int port)
+int tcp_client::connect_to_server(char * ipaddr, int port, int mode)
 {
 	server.sin_addr.s_addr = inet_addr(ipaddr);
 	server.sin_port = htons(port);
 	server.sin_family = AF_INET;
 
-	if (connect(this->csock, (struct sockaddr *)&server, sizeof(server)) < 0)
+	if (mode==1) // mode is server 
 	{
-		perror("Couldn't establish connection to the server ");
-		exit(0);
+		// bind here
 	}
+
+	else // mode is client
+	{
+		if (connect(this->csock, (struct sockaddr *)&server, sizeof(server)) < 0)
+		{
+			perror("Couldn't establish connection to the server ");
+			exit(0);
+		}
+	}
+
 
 	return csock;
 }

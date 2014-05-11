@@ -20,7 +20,7 @@ class tcp_client
 {
 public:
 	tcp_client();
-	int connect_to_server(char *, int port);
+	int connect_to_server(char *, int port, int);
 	int send_data(frame *, struct sockaddr_in);
 	int receive_data(char *);
 	void conn_close();
