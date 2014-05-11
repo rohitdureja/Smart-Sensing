@@ -1,83 +1,79 @@
 #include "threads.h"
 
+// Constructor, Connect to Server 
+threads::threads(char *server_ip_l, int port)
+{	
+	this->conn.connect_to_server(server_ip_l, port, 0);
+}
 
-	/*void worker(queue * receive_queue, int * csock)
-	{
-
-	}*/
-
-	threads::threads(char *server_ip_l, int port)
-	{	
-		//strncpy(server_ip, server_ip_l,strlen(server_ip_l));
-		conn.connect_to_server(server_ip_l, port, 0);
-	}
-
+// Push frame onto the send queue
 void threads::send_message(frame* send_frame)
-	{
-		// Send message using tcp_client.c/.h
-		this->send_frame_queue.push(*send_frame);
-	}
+{
+	frame f = *send_frame;
+	this->send_frame_queue.push(f);
+}
 
-void threads::receive_message(frame* read_frame)
-	{
-		// Just pop from the queue if queue not empty
-		frame temp_frame = this->receive_frame_queue.front();
-		this->receive_frame_queue.pop();
-		read_frame = &temp_frame;
-	}
+// Get frame by popping the receive queue
+void threads::receive_message(frame& read_frame)
+{
+	frame temp_frame = this->receive_frame_queue.front();
+	this->receive_frame_queue.pop();
+	read_frame = temp_frame;
+}
 
+// Thread function to send frames from the send queue
 void threads::sender()
-	{
-		frame send_frame;
-		char * send_buf;
-		while(1)
+{
+	frame send_frame;
+	char * send_buf;
+	while(1)
+	{	
+		// Create unique lock on the send queue mutex
+		unique_lock<mutex> send_lk_send(this->send_frame_queue_mtx);
+		
+		while(this->send_frame_queue.empty())
 		{
-			unique_lock<mutex> send_lk_send(this->send_frame_queue_mtx);
-			
-			while(this->send_frame_queue.empty())
-			{
-				send_frame_cv.wait(send_lk_send);	
-			}	
+			// Conditional variable wait 
+			send_frame_cv.wait(send_lk_send);	
+		}	
 
-			send_frame = this->send_frame_queue.front();
-			send_frame_queue.pop();
-			send_lk_send.unlock();
+	send_frame = this->send_frame_queue.front();
+	send_frame_queue.pop();
+	send_lk_send.unlock();
 
-			// send frame using tcp_client.h and .c
-			//while(sendto(csock, send_message.packet, strlen(send_message.packet), 0, (SA *) &send_message.address, sizeof(send_message.address)) < 0);
-			send_frame.make(send_buf);
-			this->conn.send_data(&send_frame, send_frame.get_addr());
-		}
-
+	send_frame.make(send_buf);
+	this->conn.send_data(&send_frame, send_frame.get_addr());
 	}
+
+}
 	
 void threads::receiver()
+{
+	frame read_frame;
+	char * receive_buf;
+	while(1)
 	{
-		frame read_frame;
-		char * receive_buf;
-		while(1)
-		{
-			// Receive messages using tcp_client.h and tcp_client.c 
-			conn.receive_data(receive_buf);
-			read_frame.parse(receive_buf, this->conn.get_server_addr());
-			this->receive_frame_queue.push(read_frame);
-
-		}
-	}	
+		conn.receive_data(receive_buf);
+		read_frame.parse(receive_buf, this->conn.get_server_addr());
+		this->receive_frame_queue.push(read_frame);
+	}
+}	
 
 void threads::worker()
 {	
 	frame read_frame;
 	unique_lock<mutex> receive_lk(this->receive_frame_queue_mtx);
 		
-		while(this->receive_frame_queue.empty())
-		{
-			this->receive_frame_cv.wait(receive_lk);
-		}
+	while(this->receive_frame_queue.empty())
+	{
+		this->receive_frame_cv.wait(receive_lk);
+	}
 
-		read_frame = this->receive_frame_queue.front();
-		this->receive_frame_queue.pop();
-		this->receive_frame_queue_mtx.unlock();
+	read_frame = this->receive_frame_queue.front();
+	this->receive_frame_queue.pop();
+	this->receive_frame_queue_mtx.unlock();
 		
-		// do things based on what the frame has
+	// do things based on what the frame has
+
+	
 }

@@ -40,11 +40,13 @@ int tcp_client::connect_to_server(char * ipaddr, int port, int mode)
 	return csock;
 }
 
+// Send frame to a particular send_address
 int tcp_client::send_data(frame * send_frame, struct sockaddr_in send_address)
 {
 	return sendto(this->csock, send_frame, BUFLEN, 0, (struct sockaddr *) &send_address, sizeof(send_address));
 }
 
+// Receive frame 
 int tcp_client::receive_data(char * buf)
 {	
 	socklen_t len = sizeof(this->server);

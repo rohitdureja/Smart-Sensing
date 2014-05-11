@@ -11,7 +11,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "tcp_client.h"
-#include "message.h"
 #include <mutex>
 #include <thread>
 #include <queue>
@@ -41,7 +40,7 @@ public:
 
 	void send_message(frame *);
 
-	void receive_message(frame *);
+	void receive_message(frame &);
 
 	void worker();
 /*	void actuator_action();
