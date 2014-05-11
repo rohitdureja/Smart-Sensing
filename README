@@ -1,0 +1,73 @@
+CIS 542 PROJECT README 
+======================
+
+Project Name - Smart Sensing
+
+Project Contributors
+====================
+Pranav Sahay
+Shanjit Singh Jajmann
+Sanketh Shetty
+Rohit Dureja 
+
+File Structure
+==============
+
+Client
++++++++
+The client folder contains the code for each node whether an actuator or a sensor. Building the makefile and running main.cpp with 3 arguments, 
+<ipaddress of the server>
+<port>
+<int (nodetype)> 
+
+For example, 
+if the IP address of the server is 192.168.1.1 and the port number is 9999. To initialise an actuator, 
+./main.o 192.168.1.1 9999 2
+
+To initialize a sensor, 
+./main.o 192.168.1.1 9999 1
+
+File Description
+----------------
+threads.cpp / threads.h
+	- Creates a threads object with functions binding it to the TCP connection for sending and receiving data from the server
+	- Runs four thread member functions 'sender', 'worker', 'receiver' and 'sensing'. 
+	- Maintains sending and receiving queues of frame objects using threads, locks and conditional variables. Busy waiting is removed. 
+
+tcp_client.c / tcp_client.h
+	- Manages TCP socket connection.
+	- Converts received string to frames.
+	- Sends strings obtained from frames.
+
+packet.cpp / packet.h 
+	- Defines frame class.
+
+Server
+++++++
+The server folder contains the code for the server. Building the makefile and running server.o.
+
+For example, 
+./server.o starts the server
+
+File Description
+----------------
+
+nodes.cpp / nodes.h
+	- Contains server logic 
+	- Maintains sensor, actuator maps and handles different messages
+	- Contains class definitions of Actuator, Sensor and Server_main
+
+threads.cpp / threads.h
+	- Creates a threads object with functions binding it to the TCP connection for sending and receiving data from the server
+	- Runs two thread member functions 'sender' and 'receiver'. 
+	- Maintains sending and receiving queues of frame objects using threads, locks and conditional variables. Busy waiting is removed. 
+
+tcp_connect.c / tcp_connect.h
+	- Manages TCP socket connection.
+	- Converts received string to frames.
+	- Sends strings obtained from frames.
+
+packet.cpp / packet.h 
+	- Defines frame class.
+
+ 
