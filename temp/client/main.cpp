@@ -11,6 +11,12 @@
 #include <queue>
 #include "packet.h"
 #include "threads.h"
+#include <mutex>
+#include <thread>
+#include <queue>
+#include <condition_variable>
+
+#include 
 
 
 int main(int argc, char *argv[])
@@ -46,9 +52,20 @@ int main(int argc, char *argv[])
 */
 
 	// Deal with converting message to frame also!! 
+
 	while(1)
 	{
+		unique_lock<mutex> receive_lk(th1.get_receive_frame_queue_mtx());
 		
+		while(th1.get_receive_frame_queue.empty())
+		{
+			th1.receive_frame_cv.wait(receive_lk);
+		}
+
+		read_frame = th1.get_receive_frame_queue.front();
+		receive_message_queue.pop();
+		receive_message_queue_mtx.unlock();
+		read_packet = (struct app_packet *)read_message.packet;
 
 
 	}

@@ -64,3 +64,18 @@ void threads::receiver()
 
 		}
 	}	
+
+mutex threads::get_receive_frame_mtx()
+{
+	return this->receive_frame_mtx;
+}
+
+queue<frame> threads::get_receive_frame_queue()
+{
+	return this->receive_frame_queue;
+}
+
+condition_variable threads::get_receive_frame_cv()
+{
+	return this->receive_frame_cv;
+}
